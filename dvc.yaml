@@ -1,0 +1,17 @@
+# Brick DVC stages
+# See https://dvc.org/doc/user-guide/project-structure/dvcyaml-files#pipelines-files-dvcyaml
+
+# The complete process can be executed using:
+# dvc repro
+# If you want to force redoing the process use 
+# dvc repro -f
+# Individual stage can be executed using: 
+# dvc repro <stage>
+
+stages:
+  download:
+    cmd: stages/01_download.sh
+    deps:
+      - stages/01_download.sh
+    outs:
+      - brick
