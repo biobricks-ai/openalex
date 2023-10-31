@@ -13,7 +13,10 @@
         devShells.default = mkShell {
           inputsFrom = [ dev-shell.devShells.${system}.default ];
           packages = [
-            awscli
+            /* Problem: awscli uses Python which causes an issue with using
+             * biobricks Python installed outside of shell
+             */
+            #awscli
           ];
         };
       });
