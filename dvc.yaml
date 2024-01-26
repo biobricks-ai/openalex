@@ -14,4 +14,4 @@ stages:
     deps:
       - stages/01_download.sh
     outs:
-      - brick
+      - download
