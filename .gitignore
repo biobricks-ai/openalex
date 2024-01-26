@@ -1,2 +1,9 @@
+.*
+!.dvc
+!.dvcignore
+!.envrc
+!.github
+!.gitignore
+
 logs
 /brick
