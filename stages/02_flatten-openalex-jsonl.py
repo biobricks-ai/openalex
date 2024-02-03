@@ -260,7 +260,10 @@ def flatten_authors():
             if FILES_PER_ENTITY and files_done >= FILES_PER_ENTITY:
                 break
             total_time += time.time() - start_time
-            print(f"flatten_authors loop average time: {total_time / files_done} seconds")
+            avg_time = total_time / files_done
+            est_time = avg_time * (len(files) - files_done)
+            print(f"flatten_authors loop average time: {avg_time} seconds")
+            print(f"flatten_authors estimated time remaining: {est_time / 60} minutes")
 
     print(f"Flattening authors done in {total_time} seconds")
 
@@ -684,7 +687,10 @@ def flatten_works():
             if FILES_PER_ENTITY and files_done >= FILES_PER_ENTITY:
                 break
             total_time += time.time() - start_time
-            print(f"flatten_works loop average time: {total_time / files_done} seconds")
+            avg_time = total_time / files_done
+            est_time = avg_time * (len(files) - files_done)
+            print(f"flatten_works loop average time: {avg_time} seconds")
+            print(f"flatten_works estimated time remaining: {est_time / 60} minutes")
     
     print(f"Flattening works done in {total_time} seconds")
 
