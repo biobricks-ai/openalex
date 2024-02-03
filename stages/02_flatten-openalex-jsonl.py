@@ -227,7 +227,8 @@ def flatten_authors():
 
         files_done = 0
         total_time = 0
-        for jsonl_file_name in glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'authors', '*', '*.gz')):
+        files = sorted(glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'authors', '*', '*.gz')))
+        for jsonl_file_name in files:
             print(files_done, jsonl_file_name)
             start_time = time.time()
             with gzip.open(jsonl_file_name, 'r') as authors_jsonl:
@@ -290,7 +291,7 @@ def flatten_concepts():
         seen_concept_ids = set()
 
         files_done = 0
-        for jsonl_file_name in glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'concepts', '*', '*.gz')):
+        for jsonl_file_name in sorted(glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'concepts', '*', '*.gz'))):
             print(jsonl_file_name)
             with gzip.open(jsonl_file_name, 'r') as concepts_jsonl:
                 for concept_json in concepts_jsonl:
@@ -370,7 +371,7 @@ def flatten_institutions():
         seen_institution_ids = set()
 
         files_done = 0
-        for jsonl_file_name in glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'institutions', '*', '*.gz')):
+        for jsonl_file_name in sorted(glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'institutions', '*', '*.gz'))):
             print(jsonl_file_name)
             with gzip.open(jsonl_file_name, 'r') as institutions_jsonl:
                 for institution_json in institutions_jsonl:
@@ -441,7 +442,7 @@ def flatten_publishers():
         seen_publisher_ids = set()
 
         files_done = 0
-        for jsonl_file_name in glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'publishers', '*', '*.gz')):
+        for jsonl_file_name in sorted(glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'publishers', '*', '*.gz'))):
             print(jsonl_file_name)
             with gzip.open(jsonl_file_name, 'r') as concepts_jsonl:
                 for publisher_json in concepts_jsonl:
@@ -493,7 +494,7 @@ def flatten_sources():
         seen_source_ids = set()
 
         files_done = 0
-        for jsonl_file_name in glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'sources', '*', '*.gz')):
+        for jsonl_file_name in sorted(glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'sources', '*', '*.gz'))):
             print(jsonl_file_name)
             with gzip.open(jsonl_file_name, 'r') as sources_jsonl:
                 for source_json in sources_jsonl:
@@ -556,7 +557,8 @@ def flatten_works():
 
         files_done = 0
         total_time = 0
-        for jsonl_file_name in glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'works', '*', '*.gz')):
+        files = sorted(glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'works', '*', '*.gz')))
+        for jsonl_file_name in files:
             print(files_done, jsonl_file_name)
             start_time = time.time()
             with gzip.open(jsonl_file_name, 'r') as works_jsonl:
