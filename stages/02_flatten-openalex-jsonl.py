@@ -6,6 +6,7 @@ import gzip
 import json
 import os
 import threading
+import time
 
 SNAPSHOT_DIR = 'download'
 CSV_DIR = 'csv'
@@ -225,8 +226,10 @@ def flatten_authors():
         counts_by_year_writer.writeheader()
 
         files_done = 0
+        total_time = 0
         for jsonl_file_name in glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'authors', '*', '*.gz')):
             print(files_done, jsonl_file_name)
+            start_time = time.time()
             with gzip.open(jsonl_file_name, 'r') as authors_jsonl:
                 for author_json in authors_jsonl:
                     if not author_json.strip():
@@ -255,8 +258,10 @@ def flatten_authors():
             files_done += 1
             if FILES_PER_ENTITY and files_done >= FILES_PER_ENTITY:
                 break
+            total_time += time.time() - start_time
+            print(f"flatten_authors loop average time: {total_time / files_done} seconds")
 
-    print('Flattening authors done')
+    print(f"Flattening authors done in {total_time} seconds")
 
 def flatten_concepts():
     with gzip.open(csv_files['concepts']['concepts']['name'], 'wt', encoding='utf-8') as concepts_csv, \
@@ -550,8 +555,10 @@ def flatten_works():
         related_works_writer = init_dict_writer(related_works_csv, file_spec['related_works'])
 
         files_done = 0
+        total_time = 0
         for jsonl_file_name in glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'works', '*', '*.gz')):
             print(files_done, jsonl_file_name)
+            start_time = time.time()
             with gzip.open(jsonl_file_name, 'r') as works_jsonl:
                 for work_json in works_jsonl:
                     if not work_json.strip():
@@ -674,8 +681,10 @@ def flatten_works():
             files_done += 1
             if FILES_PER_ENTITY and files_done >= FILES_PER_ENTITY:
                 break
+            total_time += time.time() - start_time
+            print(f"flatten_works loop average time: {total_time / files_done} seconds")
     
-    print('Flattening works done')
+    print(f"Flattening works done in {total_time} seconds")
 
 def init_dict_writer(csv_file, file_spec, **kwargs):
     writer = csv.DictWriter(
@@ -685,11 +694,13 @@ def init_dict_writer(csv_file, file_spec, **kwargs):
     return writer
 
 def flatten_smaller_files():
+    start_time = time.time()
     flatten_concepts()
     flatten_institutions()
     flatten_publishers()
     flatten_sources()
-    print('Flattening smaller files done')
+    total_time = time.time() - start_time
+    print(f"Flattening smaller files done in {total_time} seconds")
 
 if __name__ == '__main__':
     thread1 = threading.Thread(target=flatten_authors)
