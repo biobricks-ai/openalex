@@ -226,8 +226,10 @@ def flatten_authors():
         counts_by_year_writer.writeheader()
 
         files_done = 0
+        total_size_done = 0
         total_time = 0
         files = sorted(glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'authors', '*', '*.gz')))
+        total_size = sum(os.path.getsize(f) for f in files)
         for jsonl_file_name in files:
             print(files_done, jsonl_file_name)
             start_time = time.time()
@@ -257,11 +259,13 @@ def flatten_authors():
                             count_by_year['author_id'] = author_id
                             counts_by_year_writer.writerow(count_by_year)
             files_done += 1
+            total_size_done += os.path.getsize(jsonl_file_name)
             if FILES_PER_ENTITY and files_done >= FILES_PER_ENTITY:
                 break
             total_time += time.time() - start_time
             avg_time = total_time / files_done
-            est_time = avg_time * (len(files) - files_done)
+            avg_time_per_byte = total_time / total_size_done
+            est_time = avg_time_per_byte * (total_size - total_size_done)
             print(f"flatten_authors loop average time: {avg_time} seconds")
             print(f"flatten_authors estimated time remaining: {est_time / 60} minutes")
 
@@ -559,8 +563,10 @@ def flatten_works():
         related_works_writer = init_dict_writer(related_works_csv, file_spec['related_works'])
 
         files_done = 0
+        total_size_done = 0
         total_time = 0
         files = sorted(glob.glob(os.path.join(SNAPSHOT_DIR, 'data', 'works', '*', '*.gz')))
+        total_size = sum(os.path.getsize(f) for f in files)
         for jsonl_file_name in files:
             print(files_done, jsonl_file_name)
             start_time = time.time()
@@ -684,11 +690,13 @@ def flatten_works():
                             })
 
             files_done += 1
+            total_size_done += os.path.getsize(jsonl_file_name)
             if FILES_PER_ENTITY and files_done >= FILES_PER_ENTITY:
                 break
             total_time += time.time() - start_time
             avg_time = total_time / files_done
-            est_time = avg_time * (len(files) - files_done)
+            avg_time_per_byte = total_time / total_size_done
+            est_time = avg_time_per_byte * (total_size - total_size_done)
             print(f"flatten_works loop average time: {avg_time} seconds")
             print(f"flatten_works estimated time remaining: {est_time / 60} minutes")
     
