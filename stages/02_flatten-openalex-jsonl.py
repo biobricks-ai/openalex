@@ -262,11 +262,12 @@ def flatten_authors():
             total_size_done += os.path.getsize(jsonl_file_name)
             if FILES_PER_ENTITY and files_done >= FILES_PER_ENTITY:
                 break
-            total_time += time.time() - start_time
+            iter_time = time.time() - start_time
+            total_time += iter_time
             avg_time = total_time / files_done
             avg_time_per_byte = total_time / total_size_done
             est_time = avg_time_per_byte * (total_size - total_size_done)
-            print(f"flatten_authors loop average time: {avg_time} seconds")
+            print(f"flatten_authors time: {iter_time} seconds")
             print(f"flatten_authors estimated time remaining: {est_time / 60} minutes")
 
     print(f"Flattening authors done in {total_time} seconds")
@@ -693,11 +694,12 @@ def flatten_works():
             total_size_done += os.path.getsize(jsonl_file_name)
             if FILES_PER_ENTITY and files_done >= FILES_PER_ENTITY:
                 break
-            total_time += time.time() - start_time
+            iter_time = time.time() - start_time
+            total_time += iter_time
             avg_time = total_time / files_done
             avg_time_per_byte = total_time / total_size_done
             est_time = avg_time_per_byte * (total_size - total_size_done)
-            print(f"flatten_works loop average time: {avg_time} seconds")
+            print(f"flatten_works time: {iter_time} seconds")
             print(f"flatten_works estimated time remaining: {est_time / 60} minutes")
     
     print(f"Flattening works done in {total_time} seconds")
