@@ -15,3 +15,12 @@ stages:
       - stages/01_download.sh
     outs:
       - download
+  csv:
+    cmd: stages/02_csv.sh
+    deps:
+      - stages/02_csv.sh
+      - stages/02_flatten-openalex-jsonl.py
+      - download
+    outs:
+      - csv:
+          push: false
