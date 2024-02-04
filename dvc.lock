@@ -13,3 +13,25 @@ stages:
       md5: 14dd94c17d826db3a6730fe9a00bed17.dir
       size: 373180853619
       nfiles: 1342
+  csv:
+    cmd: stages/02_csv.sh
+    deps:
+    - path: download
+      hash: md5
+      md5: 14dd94c17d826db3a6730fe9a00bed17.dir
+      size: 373180853619
+      nfiles: 1342
+    - path: stages/02_csv.sh
+      hash: md5
+      md5: 03f87d6d175f70e31d8d62ce785f6832
+      size: 85
+    - path: stages/02_flatten-openalex-jsonl.py
+      hash: md5
+      md5: a537530ad7b25772fdb2a0ab5a19dbe6
+      size: 34042
+    outs:
+    - path: csv
+      hash: md5
+      md5: ff292d2d66bbd4c75cbd406fbb0ce454.dir
+      size: 220253556401
+      nfiles: 31

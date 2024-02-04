@@ -22,5 +22,4 @@ stages:
       - stages/02_flatten-openalex-jsonl.py
       - download
     outs:
-      - csv:
-          push: false
+      - csv
