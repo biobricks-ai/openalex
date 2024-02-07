@@ -35,3 +35,25 @@ stages:
       md5: ff292d2d66bbd4c75cbd406fbb0ce454.dir
       size: 220253556401
       nfiles: 31
+  brick:
+    cmd: stages/03_brick.sh
+    deps:
+    - path: csv
+      hash: md5
+      md5: ff292d2d66bbd4c75cbd406fbb0ce454.dir
+      size: 220253556401
+      nfiles: 31
+    - path: stages/03_brick.sh
+      hash: md5
+      md5: 606174ad68be75fa53e31cff3fee1659
+      size: 740
+    - path: stages/03_csv2parquet.py
+      hash: md5
+      md5: 08f49befa6e5e19e5748cf8d0d7f19fc
+      size: 2145
+    outs:
+    - path: brick
+      hash: md5
+      md5: 77dbf1c0a4a8a08d4005a6d2928a7c98.dir
+      size: 347704884147
+      nfiles: 31

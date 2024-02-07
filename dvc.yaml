@@ -23,3 +23,11 @@ stages:
       - download
     outs:
       - csv
+  brick:
+    cmd: stages/03_brick.sh
+    deps:
+      - stages/03_brick.sh
+      - stages/03_csv2parquet.py
+      - csv
+    outs:
+      - brick
