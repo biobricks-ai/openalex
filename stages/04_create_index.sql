@@ -1,0 +1,17 @@
+CREATE INDEX authors_id_idx ON authors (id);
+CREATE INDEX concepts_id_idx ON concepts (id);
+CREATE INDEX concepts_ancestors_concept_id_idx ON concepts_ancestors (concept_id);
+CREATE INDEX concepts_related_concepts_concept_id_idx ON concepts_related_concepts (concept_id);
+CREATE INDEX concepts_related_concepts_related_concept_id_idx ON concepts_related_concepts (related_concept_id);
+CREATE INDEX institution_id_idx ON institutions (id);
+CREATE INDEX publishers_id_idx ON publishers (id);
+CREATE INDEX sources_id_idx ON sources (id);
+CREATE INDEX works_id_idx ON works (id);
+CREATE INDEX works_ids_work_id_idx ON works_ids (work_id);
+CREATE INDEX works_ids_dois_idx ON works_ids (doi);
+CREATE INDEX works_ids_openalex_idx ON works_ids (openalex);
+CREATE INDEX works_ids_pmid_idx ON works_ids (pmid);
+CREATE INDEX works_ids_pmcid_idx ON works_ids (pmcid);
+CREATE INDEX works_primary_locations_work_id_idx ON works_primary_locations (work_id);
+CREATE INDEX works_locations_work_id_idx ON works_locations (work_id);
+CREATE INDEX works_best_oa_locations_work_id_idx ON works_best_oa_locations (work_id);

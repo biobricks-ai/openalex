@@ -2,7 +2,7 @@
   description = "OpenAlex BioBrick";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
     flake-utils.url = "github:numtide/flake-utils";
     dev-shell.url = "github:biobricks-ai/dev-shell";
   };
@@ -36,7 +36,7 @@
       in {
         devShells.default = mkShell {
           inputsFrom = [ dev-shell.devShells.${system}.default ];
-          packages = [ pg2sqlite ];
+          packages = [ duckdb pg2sqlite ];
         };
       });
 }
