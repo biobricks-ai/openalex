@@ -3,9 +3,13 @@ import glob
 from pathlib import Path
 import subprocess
 import multiprocessing
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 import boto3
-import botocore
+from botocore import UNSIGNED
+from botocore.client import Config
+
+import csv2parquet
+import flatten_openalex_jsonl
 
 print('Working directory: ', Path.cwd())
 
@@ -16,13 +20,13 @@ Path('brick').mkdir(exist_ok=True)
 
 # Download OpenAlex data
 
-def download_file(s3,bucket,file_keys):
-    local_file_path = Path('download')
+def download_file(s3, bucket, file_key):
+    local_file_path = Path('download') / file_key
     local_file_path.parent.mkdir(parents=True, exist_ok=True)
-    s3.download_file(bucket, str(local_file_path))
+    s3.download_file(bucket, file_key, str(local_file_path))
 
 def run_s3():
-    s3 = boto3.client('s3', config=boto3.session.Config(signature_version=botocore.UNSIGNED))
+    s3 = boto3.client('s3', config=Config(signature_version=UNSIGNED))
     bucket = 'openalex'
 
     file_keys = []
@@ -31,20 +35,19 @@ def run_s3():
         if 'Contents' in result:
             file_keys.extend([item['Key'] for item in result['Contents']])
 
-    with ProcessPoolExecutor(max_workers=multiprocessing.cpu_count()) as executor:
-        args_list = [(s3, bucket, file_key) for file_key in file_keys]
-        executor.map(download_file, args_list)
+    with ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()) as executor:
+        executor.map(lambda key: download_file(s3, bucket, key), file_keys)
     
     print("S3 download completed")
 
 # Processing and flattening data
 def process_single_file(file):
-    subprocess.run(['python', 'flatten_openalex_jsonl_v2.py', str(file)], check=True)
+    flatten_openalex_jsonl.run_flattening(str(file))
     print(f"Processed file: {file}")
 
 def process_data():
     jsonl_files = glob.glob('download/**/*.gz', recursive=True)
-    with ProcessPoolExecutor(max_workers=multiprocessing.cpu_count()) as executor:
+    with ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()) as executor:
         executor.map(process_single_file, jsonl_files)
     
     print("Data processing and flattening completed")
@@ -53,12 +56,12 @@ def process_data():
 def process_file(file):
     base_name = file.stem.removesuffix('csv')
     output_file = Path('brick') / f'{base_name}.parquet'
-    subprocess.run(['python', 'csv2parquet.py', str(file), str(output_file)], check=True)
+    csv2parquet.csv_to_parquet(str(file), str(output_file))
     print(f'CSV to Parquet conversion completed for {file}')
 
 def convert_csv_to_parquet():
     files = list(Path('csv').glob('*.csv.gz'))
-    with ProcessPoolExecutor(max_workers=multiprocessing.cpu_count()) as executor:
+    with ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()) as executor:
         executor.map(process_file, files)
     print('All CSV to Parquet conversions completed')
 

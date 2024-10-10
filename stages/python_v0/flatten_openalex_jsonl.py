@@ -691,7 +691,7 @@ def flatten_smaller_files():
     total_time = time.time() - start_time
     print(f"Flattening smaller files done in {total_time} seconds")
 
-if __name__ == '__main__':
+def run_flattening():
     thread1 = threading.Thread(target=flatten_authors)
     thread2 = threading.Thread(target=flatten_smaller_files)
     thread3 = threading.Thread(target=flatten_works)
@@ -703,3 +703,7 @@ if __name__ == '__main__':
     thread1.join()
     thread2.join()
     thread3.join()
+
+
+if __name__ == "__main__":
+    run_flattening()
