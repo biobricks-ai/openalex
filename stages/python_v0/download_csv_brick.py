@@ -15,10 +15,6 @@ Path('csv').mkdir(exist_ok=True)
 Path('brick').mkdir(exist_ok=True)
 
 # Download OpenAlex data
-#def run_s3():
-#    s3 = 'aws s3 sync "s3://openalex" "download" --no-sign-request'
-#    subprocess.run(s3, shell=True, check=True)
-#    print("S3 download completed")
 
 def download_file(s3,bucket,file_keys):
     local_file_path = Path('download')
@@ -66,8 +62,13 @@ def convert_csv_to_parquet():
         executor.map(process_file, files)
     print('All CSV to Parquet conversions completed')
 
-# Run process sequentially
-if __name__ == '__main__':
-    run_s3()
-    process_data()
-    convert_csv_to_parquet()
+
+
+# Download OpexAlex Data
+run_s3()
+
+# Process data
+process_data()
+
+# Convert to parquet format
+convert_csv_to_parquet()

@@ -1,6 +1,5 @@
 import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
+import fastparquet
 from pathlib import Path
 import sys
 
@@ -50,25 +49,19 @@ dtypes = {
 }
 
 base_filename = Path(InFileName).stem 
-if base_filename in schemas:
-    dtype = dtypes.get(base_filename)
-    schema = schemas[base_filename]
+dtype = dtypes.get(base_filename)
+
+print(f"Using dtype: {dtype}")
+
+if dtype:
+    rows = pd.read_csv(InFileName, sep=',', dtype=dtype, compression='gzip', chunksize=chunk_size)
 else:
-    dtype = None
-    # Determine the schema from the first few rows of the CSV
-    # Use a small number of rows to minimize memory usage
-    schema_df = pd.read_csv(InFileName, sep=',', nrows=1000000, compression='gzip')
-    schema = pa.Table.from_pandas(df=schema_df).schema
+    rows = pd.read_csv(InFileName, sep=',', compression='gzip', chunksize=chunk_size)
 
-print(schema)
-
-# Use a context manager to ensure the Parquet writer is properly closed after processing
-with pq.ParquetWriter(OutFileName, schema, compression='snappy') as writer:
-    if dtype:
-        rows = pd.read_csv(InFileName, sep=',', dtype=dtype, compression='gzip', chunksize=chunk_size)
+first_chunk = True
+for chunk in rows:
+    if first_chunk:
+        fastparquet.write(OutFileName, chunk, compression='snappy', append=False)
+        first_chunk = False
     else:
-        rows = pd.read_csv(InFileName, sep=',', compression='gzip', chunksize=chunk_size)
-
-    for chunk in rows:
-        table = pa.Table.from_pandas(chunk, schema=schema)
-        writer.write_table(table)
+        fastparquet.write(OutFileName, chunk, compression='snappy', append=True)
